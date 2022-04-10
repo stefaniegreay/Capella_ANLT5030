@@ -1,0 +1,54 @@
+libname mydata '/home/stefaniegreay/';
+
+data mydata.bayview;
+set work.import;
+run;
+
+proc sort data=mydata.bayview;
+by Gender;
+run;
+
+proc freq data=mydata.bayview;
+tables _CHAR_ / plots=freqplot;
+by Gender;
+run;
+
+data mydata.bayview2;
+set mydata.bayview;
+CfI=2;
+CoE=2;
+CoIP=2;
+Cheated=2;
+if 'Copied from Internet'n = 'Yes' then CfI=1;
+if 'Copied on Exam'n = 'Yes' then CoE=1;
+if 'Collaborated on Individual Proje'n = 'Yes' then CoIP=1;
+if ('Copied from Internet'n = 'Yes' 
+	or 'Copied on Exam'n = 'Yes' 
+	or 'Collaborated on Individual Proje'n = 'Yes' ) then Cheated=1;
+run;
+
+proc freq data=mydata.bayview2;
+tables Cheated / nocum norow binomial;
+ exact binomial;
+ run;
+ 
+proc sort data=mydata.bayview2;
+by Gender;
+run;
+
+
+proc freq data=mydata.bayview2;
+tables Cheated / nocum norow binomial;
+by Gender;
+exact binomial;
+run;
+
+proc freq data=mydata.bayview2;
+tables Cheated / nocum norow binomial(p=.56);
+ exact binomial;
+ run;
+ 
+proc freq data=mydata.bayview2;
+tables Cheated / nocum norow binomial(p=.47);
+ exact binomial;
+ run;

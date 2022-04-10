@@ -1,0 +1,96 @@
+libname mydata '/home/stefaniegreay/';
+
+data mydata.medical1;
+set work.import;
+run;
+
+data mydata.medical2;
+set work.import1;
+run;
+
+data mydata.fl1;
+set mydata.medical1(keep='Florida'n);
+state='Florida';
+depression=Florida;
+run;
+
+
+data mydata.ny1;
+set mydata.medical1(keep='New York'n);
+state='New York';
+depression='New York'n;
+run;
+
+data mydata.nc1;
+set mydata.medical1(keep='North Carolina'n);
+state='North Carolina';
+depression='North Carolina'n;
+run;
+
+data mydata.medical1a;
+set mydata.fl1 mydata.ny1 mydata.nc1;
+keep state depression;
+run;
+
+
+data mydata.fl2;
+set mydata.medical2(keep='Florida'n);
+state='Florida';
+depression=Florida;
+run;
+
+
+data mydata.ny2;
+set mydata.medical2(keep='New York'n);
+state='New York';
+depression='New York'n;
+run;
+
+data mydata.nc2;
+set mydata.medical2(keep='North Carolina'n);
+state='North Carolina';
+depression='North Carolina'n;
+run;
+
+
+data mydata.medical2a;
+set mydata.fl2 mydata.ny2 mydata.nc2;
+keep state depression;
+run;
+
+proc sort data=mydata.medical1a;
+by state;
+run;
+
+proc univariate data=mydata.medical1a;
+by state;
+var depression;
+title 'Descriptive Summary of Depression by State Medical1.xlsx';
+run;
+
+
+proc sort data=mydata.medical2a;
+by state;
+run;
+
+proc univariate data=mydata.medical2a;
+by state;
+var depression;
+title 'Descriptive Summary of Depression by State Medical2.xlsx';
+run;
+
+
+
+proc anova data=mydata.medical1a;
+class state;
+model depression = state;
+means state/tukey;
+title 'ANOVA of Depression by State Medical1.xlsx';
+run; 
+
+proc anova data=mydata.medical2a;
+class state;
+model depression = state;
+means state/tukey;
+title 'ANOVA of Depression by State Medical2.xlsx';
+run; 

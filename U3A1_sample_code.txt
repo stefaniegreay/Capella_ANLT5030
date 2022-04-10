@@ -1,0 +1,10 @@
+libname mydata '/home/stefaniegreay';
+
+data mydata.gulfprop;
+set work.import;
+run;
+
+proc univariate data=mydata.gulfprop cibasic plots;
+var _ALL_;
+run;
+

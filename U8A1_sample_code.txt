@@ -1,0 +1,24 @@
+libname mydata '/home/stefaniegreay';
+run;
+
+data mydata.bankfull;
+set work.import;
+run;
+
+proc freq data=mydata.bankfull;
+tables campaign contact default education housing job loan marital month poutcome y;
+run;
+
+proc univariate data=mydata.bankfull;
+var age balance day duration pdays previous;
+run;
+
+proc corr data=mydata.bankfull;
+var age balance day duration pdays previous;
+run;
+
+proc logistic data=mydata.bankfull descending;
+class campaign contact default education housing job loan marital month poutcome;
+model y= age balance day duration pdays previous 
+campaign contact default education housing job loan marital month poutcome;
+run;

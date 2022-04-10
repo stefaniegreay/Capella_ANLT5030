@@ -1,0 +1,39 @@
+libname mydata '/home/stefaniegreay/';
+run;
+
+data mydata.consumer;
+set work.import1;
+run;
+
+
+proc  contents data=mydata.consumer;
+run;
+
+proc univariate data=mydata.consumer plots;
+var Income Household_Size Amount_Charged;
+run;
+
+proc corr data=mydata.consumer;
+var Income Household_Size Amount_Charged;
+run;
+
+proc reg data=mydata.consumer;
+model Amount_Charged=Income/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Household_Size/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Income Household_Size/stb pcorr2 SCORR2(TESTS) stb clb;
+run;
+
+/*example with interaction variable for Income*Household_Size*/
+data mydata.consumer1;
+set mydata.consumer;
+Inc_HS = Income*Household_Size;
+run;
+
+proc reg data=mydata.consumer1;
+model Amount_Charged=Income/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Household_Size/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Inc_HS/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Income Household_Size/stb pcorr2 SCORR2(TESTS) stb clb;
+model Amount_Charged=Income Household_Size Inc_HS/stb pcorr2 SCORR2(TESTS) stb clb;
+run;
+
